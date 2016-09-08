@@ -2,12 +2,11 @@ package controllers
 
 import javax.inject.Inject
 
-import com.mohiva.play.silhouette.api.{ Environment, LogoutEvent, Silhouette }
-import com.mohiva.play.silhouette.impl.authenticators.CookieAuthenticator
-import com.mohiva.play.silhouette.impl.providers.SocialProviderRegistry
-import forms._
-import models.User
-import play.api.i18n.MessagesApi
+import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
+import play.api.i18n.{ I18nSupport, MessagesApi }
+import play.api.libs.json.Json
+import play.api.mvc.Controller
+import utils.auth.DefaultEnv
 
 import scala.concurrent.Future
 
@@ -15,57 +14,43 @@ import scala.concurrent.Future
  * The basic application controller.
  *
  * @param messagesApi The Play messages API.
- * @param env The Silhouette environment.
- * @param socialProviderRegistry The social provider registry.
+ * @param silhouette The Silhouette stack.
  */
 class ApplicationController @Inject() (
   val messagesApi: MessagesApi,
-  val env: Environment[User, CookieAuthenticator],
-  socialProviderRegistry: SocialProviderRegistry)
-  extends Silhouette[User, CookieAuthenticator] {
+  silhouette: Silhouette[DefaultEnv])
+  extends Controller with I18nSupport {
 
   /**
-   * Handles the index action.
+   * Returns the user.
    *
    * @return The result to display.
    */
-  def index = SecuredAction.async { implicit request =>
-    Future.successful(Ok(views.html.home(request.identity)))
+  def user = silhouette.SecuredAction.async { implicit request =>
+    Future.successful(Ok(Json.toJson(request.identity)))
   }
 
   /**
-   * Handles the Sign In action.
-   *
-   * @return The result to display.
+   * Manages the sign out action.
    */
-  def signIn = UserAwareAction.async { implicit request =>
-    request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.ApplicationController.index()))
-      case None => Future.successful(Ok(views.html.signIn(SignInForm.form, socialProviderRegistry)))
+  def signOut = silhouette.SecuredAction.async { implicit request =>
+    silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
+    silhouette.env.authenticatorService.discard(request.authenticator, Ok)
+  }
+
+  /**
+   * Provides the desired template.
+   *
+   * @param template The template to provide.
+   * @return The template.
+   */
+  def view(template: String) = silhouette.UserAwareAction { implicit request =>
+    template match {
+      case "home" => NotFound
+      case "signUp" => NotFound
+      case "signIn" => NotFound
+      case "navigation" => NotFound
+      case _ => NotFound
     }
-  }
-
-  /**
-   * Handles the Sign Up action.
-   *
-   * @return The result to display.
-   */
-  def signUp = UserAwareAction.async { implicit request =>
-    request.identity match {
-      case Some(user) => Future.successful(Redirect(routes.ApplicationController.index()))
-      case None => Future.successful(Ok(views.html.signUp(SignUpForm.form)))
-    }
-  }
-
-  /**
-   * Handles the Sign Out action.
-   *
-   * @return The result to display.
-   */
-  def signOut = SecuredAction.async { implicit request =>
-    val result = Redirect(routes.ApplicationController.index())
-    env.eventBus.publish(LogoutEvent(request.identity, request, request2Messages))
-
-    env.authenticatorService.discard(request.authenticator, result)
   }
 }
