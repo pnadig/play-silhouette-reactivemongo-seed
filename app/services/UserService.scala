@@ -1,4 +1,4 @@
-package net.bsuccess.pipeboard.services
+package persistence.services
 
 import com.mohiva.play.silhouette.api.services.IdentityService
 import com.mohiva.play.silhouette.api.LoginInfo
