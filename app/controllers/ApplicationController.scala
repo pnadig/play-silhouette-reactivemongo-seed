@@ -5,7 +5,7 @@ import javax.inject.Inject
 import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
 import play.api.i18n.{ I18nSupport, MessagesApi }
 import play.api.libs.json.Json
-import play.api.mvc.Controller
+import play.api.mvc._
 import utils.auth.DefaultEnv
 
 import scala.concurrent.Future
@@ -20,6 +20,14 @@ class ApplicationController @Inject() (
   val messagesApi: MessagesApi,
   silhouette: Silhouette[DefaultEnv])
   extends Controller with I18nSupport {
+
+  def index = Action {
+    Ok(views.html.index())
+  }
+
+  def signIn = Action {
+    Ok(views.html.signIn())
+  }
 
   /**
    * Returns the user.
