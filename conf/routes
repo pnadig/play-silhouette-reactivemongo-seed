@@ -2,8 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET         /                                controllers.ApplicationController.index
-GET         /views/signIn                    controllers.ApplicationController.signIn
 GET         /user                            controllers.ApplicationController.user
 GET         /signOut                         controllers.ApplicationController.signOut
 POST        /signIn                          controllers.SignInController.submit

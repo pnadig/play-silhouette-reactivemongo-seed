@@ -21,14 +21,6 @@ class ApplicationController @Inject() (
   silhouette: Silhouette[DefaultEnv])
   extends Controller with I18nSupport {
 
-  def index = Action {
-    Ok(views.html.index())
-  }
-
-  def signIn = Action {
-    Ok(views.html.signIn())
-  }
-
   /**
    * Returns the user.
    *
@@ -54,9 +46,9 @@ class ApplicationController @Inject() (
    */
   def view(template: String) = silhouette.UserAwareAction { implicit request =>
     template match {
-      case "home" => NotFound
-      case "signUp" => NotFound
-      case "signIn" => NotFound
+      case "home" => Ok(views.html.index())
+      case "signUp" => Ok(views.html.signUp())
+      case "signIn" => Ok(views.html.signIn())
       case "navigation" => NotFound
       case _ => NotFound
     }
