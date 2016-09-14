@@ -1,12 +1,13 @@
 'use strict';
 
-var app = angular.module('App', ['ngRoute', 'ngCookies', 'satellizer']);
+var app = angular.module('App', ['ngCookies', 'ui.router', 'satellizer']);
 
 app.run(function($rootScope) {
 	$rootScope.user = {};
 });
 
-app.config(function($stateProvider, $httpProvider, $authProvider) {
+app.config(function($urlRouterProvider, $stateProvider, $httpProvider, $authProvider) {
+	$urlRouterProvider.otherwise('/home');
 	$stateProvider
 		.state('home', {
 			url: '/home',
@@ -63,4 +64,19 @@ app.config(function($stateProvider, $httpProvider, $authProvider) {
 			}
 		};
 	});
+
+	$authProvider.httpInterceptor = true;
+	$authProvider.loginOnSignup = true;
+	$authProvider.loginRedirect = '/home';
+	$authProvider.logoutRedirect = '/';
+	$authProvider.signupRedirect = '/home';
+	$authProvider.loginUrl = '/signIn';
+	$authProvider.signupUrl = '/signUp';
+	$authProvider.loginRoute = '/signIn';
+	$authProvider.signupRoute = '/signUp';
+	$authProvider.tokenName = 'token';
+	$authProvider.tokenPrefix = 'satellizer';
+	$authProvider.authHeader = 'X-Auth-Token';
+	$authProvider.platform = 'browser';
+	$authProvider.storage = 'localStorage';
 });
