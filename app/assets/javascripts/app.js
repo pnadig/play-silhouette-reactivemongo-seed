@@ -12,6 +12,7 @@ app.config(function($urlRouterProvider, $stateProvider, $httpProvider, $authProv
 		.state('home', {
 			url: '/home',
 			templateUrl: '/views/home.html',
+			controller: 'HomeCtrl',
 			resolve: {
 				authenticated: function($q, $location, $auth) {
 					var deferred = $q.defer();
