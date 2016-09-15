@@ -1,11 +1,11 @@
 'use strict';
 
-app.controller('SignOutCtrl', ['$auth', function($auth) {
+app.controller('SignOutCtrl', ['$auth', '$location', function($auth, $location) {
 	if (!$auth.isAuthenticated()) {
 		return;
 	}
 	$auth.logout()
-		.then(function(response) {
-			console.log(response);
+		.then(function() {
+			$location.path("/signIn");
 		});
 }]);

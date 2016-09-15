@@ -67,17 +67,11 @@ app.config(function($urlRouterProvider, $stateProvider, $httpProvider, $authProv
 	});
 
 	$authProvider.httpInterceptor = true;
-	$authProvider.loginOnSignup = true;
-	$authProvider.loginRedirect = '/home';
-	$authProvider.logoutRedirect = '/';
-	$authProvider.signupRedirect = '/home';
 	$authProvider.loginUrl = '/signIn';
 	$authProvider.signupUrl = '/signUp';
 	$authProvider.loginRoute = '/signIn';
 	$authProvider.signupRoute = '/signUp';
 	$authProvider.tokenName = 'token';
-	$authProvider.tokenPrefix = 'satellizer';
 	$authProvider.authHeader = 'X-Auth-Token';
-	$authProvider.platform = 'browser';
 	$authProvider.storage = 'localStorage';
 });

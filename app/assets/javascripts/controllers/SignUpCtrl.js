@@ -1,11 +1,11 @@
 'use strict';
 
-app.controller('SignUpCtrl', ['$scope', '$auth', function($scope, $auth) {
-  $scope.submit = function() {
-    $auth.signup($scope.user).then(function(response) {
-      console.log(response);
-    }).catch(function(response) {
-      console.log(response);
-    });
-  };
+app.controller('SignUpCtrl', ['$scope', '$auth', '$location', function($scope, $auth, $location) {
+	$scope.submit = function() {
+		$auth.signup($scope.user).then(function() {
+			$location.path("/home");
+		}).catch(function(error) {
+			console.log(error);
+		});
+	};
 }]);
