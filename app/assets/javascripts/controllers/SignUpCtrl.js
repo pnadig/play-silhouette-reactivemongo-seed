@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('SignUpCtrl', ['$scope', '$alert', '$auth', function($scope, $alert, $auth) {
+app.controller('SignUpCtrl', ['$scope', '$auth', function($scope, $auth) {
   $scope.submit = function() {
     $auth.signup($scope.user).then(function(response) {
       console.log(response);
